@@ -9,24 +9,31 @@
 #define NUM_POINTS 100000000
 #define STEP (0.5/NUM_POINTS)
 
-double pi = 0.0;
+std::atomic<double>  pi{0};
 pthread_mutex_t mutex_lock;
+double sum[MAX_THREADS];
 
 double f(double x) {
     return (6.0/sqrt(1-x*x));
 }
 
+void add_to_pi(double x) {
+    auto current = pi.load();
+    while (!pi.compare_exchange_weak(current, current + x));
+}
+
 void* compute_pi(void *thread_number) {
-    int num = *(int *)thread_number;
+    double num = *(double *)thread_number;
+    int index = (int)num;
 
     int i;
     double x = STEP * num;
-    for (i = num; i < NUM_POINTS; i += MAX_THREADS) {
-        pthread_mutex_lock(&mutex_lock);
-        pi += STEP*f(x);
-        pthread_mutex_unlock(&mutex_lock);
+    double temp_sum = 0;
+    for (i = index; i < NUM_POINTS; i += MAX_THREADS) {
+        temp_sum += STEP*f(x);
         x += STEP * MAX_THREADS;
     }
+    sum[index] = temp_sum;
     pthread_exit(NULL);
 }
 
@@ -40,21 +47,21 @@ void pi_parallel() {
     struct timespec start, stop;
 
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-    int i = 0;
-    for (i = 0; i < MAX_THREADS; i++) {
-        int *thread_numbers = (int *)malloc(sizeof(*thread_numbers));
-        *thread_numbers = i;
-        pthread_create(&p_threads[i], &attr, compute_pi, thread_numbers);
-        free(thread_numbers);
+    int i;
+    for (i = 0; i < MAX_THREADS; ++i) {
+        sum[i] = i;
+        pthread_create(&p_threads[i], &attr, compute_pi,(void *)&sum[i]);
     }
+    double total_sum = 0;
     for (i = 0; i < MAX_THREADS; i++) {
         pthread_join(p_threads[i], NULL);
+        total_sum += sum[i];
     }
     clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
 
     execTime = 1000000000 * (stop.tv_sec - start.tv_sec) + stop.tv_nsec - start.tv_nsec;
     printf("elapsed process CPU time = %llu nanoseconds\n", (long long unsigned int) execTime);
-    printf("%.20f\n", pi);
+    printf("%.20f\n", total_sum);
 }
 
 int main(int argc, char *argv[]) {
