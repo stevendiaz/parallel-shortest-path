@@ -7,4 +7,8 @@ benchmark: benchmark.cpp
 	$(CXX) $(CXXFLAGS) benchmark.cpp -o benchmark.out
 
 csr: main.cpp CSR.cpp Parser.cpp
-	$(CXX) $(CXXFLAGS) main.cpp CSR.cpp Parser.cpp -o csr.out
+	$(CXX) $(CXXFLAGS) main.cpp CSR.cpp Parser.cpp -o csr.o
+
+clean:
+	rm *~
+	rm *.o
