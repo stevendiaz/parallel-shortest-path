@@ -2,6 +2,8 @@
 
 Parser::Parser(int32_t sourceNode) : src(sourceNode) {}
 
+Parser::Parser():src(1) {}
+
 CSR Parser::parseInput(){
     //Extract info from first line
     string s;

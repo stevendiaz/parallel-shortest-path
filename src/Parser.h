@@ -16,6 +16,7 @@ private:
     int32_t stoi32(string s);
 public:
     Parser(int32_t sourceNode);
+    Parser();
     CSR parseInput();
 };
 
