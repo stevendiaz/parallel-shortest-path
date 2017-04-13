@@ -26,13 +26,23 @@ CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges
  *      internal datastructures.
  */
 void CSR::update(int32_t x, int end){
+  clock_t t = clock();
+
+
     //Update JA
     sort(tempJA.begin(), tempJA.end());
     JA.insert(JA.end(), tempJA.begin(), tempJA.end());
 
+    t = clock()-t;
+    cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+
     //Update Value
     for (auto it = tempJA.begin(); it != tempJA.end(); ++it)
         value.push_back(seenNodes[*it]);
+
+    t = clock()-t;
+    cout << "Update JA takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+
 
     //Update IA
     while(x <= end) {
@@ -43,6 +53,8 @@ void CSR::update(int32_t x, int end){
         ++currSrc;
         ++x;
     }
+    t = clock()-t;
+    cout << "Update IA  takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 }
 
 /* @param int32_t x: x value in the adjaceny matrix, the from node label
@@ -52,14 +64,14 @@ void CSR::update(int32_t x, int end){
  *      sets the weight of edge x to y to val
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
-    clock_t t = clock();
+  //clock_t t = clock();
 
     x -= src;
     y -= src;
     if(relaxMap.find(x) == relaxMap.end()) relaxMap[x] = set<int32_t>({y});
     else relaxMap[x].insert(y);
-    t = clock() - t;
-    cout << "relax map lookup takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    //t = clock() - t;
+    //cout << "relax map lookup takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
     //Skip all 0-outDegree nodes from current source and update current source node
     if(currSrc < x) {
@@ -75,8 +87,8 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
     } else {
         if(seenNodes[y] < val) seenNodes[y] = val;
     }
-    t = clock() - t;
-    cout << "update value takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    //t = clock() - t;
+    //cout << "update value takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 }
 
 /*

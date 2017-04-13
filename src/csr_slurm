@@ -9,11 +9,11 @@
 #-----------------------------------------------------------------
 
 #SBATCH -J csr           # Job name
-#SBATCH -o csr.out    # Specify stdout output file (%j expands to jobId)
+#SBATCH -o csr%j.out    # Specify stdout output file (%j expands to jobId)
 #SBATCH -p development           # Queue name
 #SBATCH -N 1                     # Total number of nodes requested (16 cores/node)
 #SBATCH -n 1                     # Total number of tasks
-#SBATCH -t 01:00:00              # Run time
+#SBATCH -t 02:00:00              # Run time
 
 # Load any necessary module
 module load gcc/4.9.3
