@@ -1,4 +1,6 @@
 #include "CSR.h"
+#include "Parser.h"
+
 
 int main(){
     clock_t t;
