@@ -6,6 +6,7 @@
 #include <set>
 #include <iostream>
 #include <algorithm>
+#include <ctime>
 
 #ifndef CSR_h
 #define CSR_h

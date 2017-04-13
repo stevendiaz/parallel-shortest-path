@@ -52,10 +52,14 @@ void CSR::update(int32_t x, int end){
  *      sets the weight of edge x to y to val
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
+    clock_t t = clock();
+
     x -= src;
     y -= src;
     if(relaxMap.find(x) == relaxMap.end()) relaxMap[x] = set<int32_t>({y});
     else relaxMap[x].insert(y);
+    t = clock() - t;
+    cout << "relax map lookup takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
     //Skip all 0-outDegree nodes from current source and update current source node
     if(currSrc < x) {
@@ -71,6 +75,8 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
     } else {
         if(seenNodes[y] < val) seenNodes[y] = val;
     }
+    t = clock() - t;
+    cout << "update value takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 }
 
 /*

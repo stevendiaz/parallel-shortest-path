@@ -10,7 +10,6 @@ CSR Parser::parseInput(){
     int32_t size, edges, x, y, val;
     cin >> s >> s >> size >> edges;
 
-    clock_t t = clock();
     //Construct CSR as we read the file
     CSR csr = CSR(size, edges, src);
     for(int i = 0; i < edges; ++i){
@@ -20,8 +19,6 @@ CSR Parser::parseInput(){
         }
     }
     csr.update(++x, size + 1);
-    t = clock() - t;
-    cout << "CSR construction takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
     return csr;
 }
