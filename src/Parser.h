@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cstring>
+#include <ctime>
 #include "CSR.h"
 
 const int MAX_CHARS_PER_LINE = 512;
