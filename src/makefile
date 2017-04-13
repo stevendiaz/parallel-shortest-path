@@ -1,9 +1,12 @@
 CXX := g++
 INCLUDE := /usr/local/include
 CXXFLAGS := -pthread -pedantic -lstdc++ -I$(INCLUDE) -Wall -Werror -std=c++11
-#CXXFLAGS := -std=c++11
 LIB := /usr/local/lib
 
 benchmark: benchmark.cpp
 	$(CXX) $(CXXFLAGS) benchmark.cpp -o benchmark.out
 
+
+csr: main.cpp CSR.cpp Parser.cpp
+    $(CXX) $(CXXFLAGS) main.cpp CSR.cpp Parser.cpp -o csr.out
+    ./csr.out <  /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs
