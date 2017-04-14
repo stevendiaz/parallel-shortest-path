@@ -32,6 +32,9 @@ void CSR::update(int32_t x, int end){
     //Update JA
     sort(tempJA.begin(), tempJA.end());
     JA.insert(JA.end(), tempJA.begin(), tempJA.end());
+    t = clock() - t;
+    cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+
 
     t = clock()-t;
     cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
@@ -65,7 +68,6 @@ void CSR::update(int32_t x, int end){
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
   //clock_t t = clock();
-
     x -= src;
     y -= src;
     if(relaxMap.find(x) == relaxMap.end()) relaxMap[x] = set<int32_t>({y});
