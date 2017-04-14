@@ -10,6 +10,7 @@
 #define STEP (0.5/NUM_POINTS)
 
 std::atomic<double>  pi{0};
+double global_pi = 0;
 pthread_mutex_t mutex_lock;
 double sum[MAX_THREADS];
 
@@ -22,7 +23,7 @@ void add_to_pi(double x) {
     while (!pi.compare_exchange_weak(current, current + x));
 }
 
-void* compute_pi(void *thread_number) {
+void* part4_compute_pi(void *thread_number) {
     double num = *(double *)thread_number;
     int index = (int)num;
 
@@ -34,6 +35,49 @@ void* compute_pi(void *thread_number) {
         x += STEP * MAX_THREADS;
     }
     sum[index] = temp_sum;
+    pthread_exit(NULL);
+}
+
+void* part3_compute_pi(void *thread_number) {
+    double num = *(double *)thread_number;
+    int index = (int)num;
+
+    int i;
+    double x = STEP * num;
+    sum[index] = 0;
+    for (i = index; i < NUM_POINTS; i += MAX_THREADS) {
+        sum[index] += STEP*f(x);
+        x += STEP * MAX_THREADS;
+    }
+    pthread_exit(NULL);
+}
+
+
+void* part1_compute_pi(void *thread_number) {
+    double num = *(double *)thread_number;
+    int index = (int)num;
+
+    int i;
+    double x = STEP * num;
+    for (i = index; i < NUM_POINTS; i += MAX_THREADS) {
+        pthread_mutex_lock(&mutex_lock);
+        global_pi += STEP*f(x);
+        pthread_mutex_unlock(&mutex_lock);
+        x += STEP * MAX_THREADS;
+    }
+    pthread_exit(NULL);
+}
+
+void* part2_compute_pi(void *thread_number) {
+    double num = *(double *)thread_number;
+    int index = (int)num;
+
+    int i;
+    double x = STEP * num;
+    for (i = index; i < NUM_POINTS; i += MAX_THREADS) {
+        add_to_pi(STEP*f(x));
+        x += STEP * MAX_THREADS;
+    }
     pthread_exit(NULL);
 }
 
@@ -50,7 +94,7 @@ void pi_parallel() {
     int i;
     for (i = 0; i < MAX_THREADS; ++i) {
         sum[i] = i;
-        pthread_create(&p_threads[i], &attr, compute_pi,(void *)&sum[i]);
+        pthread_create(&p_threads[i], &attr, part3_compute_pi,(void *)&sum[i]);
     }
     double total_sum = 0;
     for (i = 0; i < MAX_THREADS; i++) {
@@ -61,7 +105,7 @@ void pi_parallel() {
 
     execTime = 1000000000 * (stop.tv_sec - start.tv_sec) + stop.tv_nsec - start.tv_nsec;
     printf("elapsed process CPU time = %llu nanoseconds\n", (long long unsigned int) execTime);
-    printf("%.20f\n", total_sum);
+    printf("%.20f\n",total_sum);
 }
 
 int main(int argc, char *argv[]) {
