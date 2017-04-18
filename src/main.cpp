@@ -3,9 +3,9 @@
 
 
 int main(){
-  clock_t t = clock();
-  
   Parser p = Parser();
+
+    clock_t t = clock();
   CSR csr = p.parseInput();
   t = clock() - t;
   cout << "CSR construction takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
