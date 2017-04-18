@@ -25,6 +25,7 @@ private:
     vector<int32_t> JA;
     vector<int32_t> seenNodes;
     int32_t currSrc;
+    int32_t currNNZ;
     int32_t NNZ;
     vector<long> nodeLabels;
     vector<int32_t> tempJA;
@@ -33,6 +34,7 @@ private:
 public:
     CSR (int32_t size, int32_t edge, int32_t source);
     void put(int32_t x, int32_t y, int32_t val);
+    void phantom_put(int32_t x);
     vector<vector<int32_t>> iterate();
     void printNodeLabels();
     int32_t getLargestOutDegree();

@@ -16,9 +16,12 @@ CSR Parser::parseInput(){
         cin >> s >> x >> y >> val;
         if(s == "a") {
             csr.put(x, y, val);
+            //csr.debugInfo();
         }
     }
-    csr.update(++x, size + 1);
+    csr.phantom_put(x + 1);
+    csr.debugInfo();
+    //csr.update(++x, size + 1);
 
     return csr;
 }
