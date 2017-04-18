@@ -1,0 +1,26 @@
+#!/bin/bash
+#-----------------------------------------------------------------
+# Example SLURM job script to run serial applications on TACC's
+# Stampede system.
+#
+# This script requests one core (out of 16) on one node. The job
+# will have access to all the memory in the node.  Note that this
+# job will be charged as if all 16 cores were requested.
+#-----------------------------------------------------------------
+
+#SBATCH -J csr           # Job name
+#SBATCH -o csr%j.out    # Specify stdout output file (%j expands to jobId)
+#SBATCH -p development           # Queue name
+#SBATCH -N 1                     # Total number of nodes requested (16 cores/node)
+#SBATCH -n 1                     # Total number of tasks
+#SBATCH -t 02:00:00              # Run time
+
+# Load any necessary module
+module load gcc/4.9.3
+
+#Compile
+make csr
+
+#Execute
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat15.dimacs
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs

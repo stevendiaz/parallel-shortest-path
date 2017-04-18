@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+/cmake-build-debug/
+.idea/
+
+/src/rmat20.dimacs
+/src/rmat15.dimacs
