@@ -1,6 +1,6 @@
 CXX := g++
 INCLUDE := /usr/local/include
-CXXFLAGS := -pthread -pedantic -lstdc++ -I$(INCLUDE) -Wall -Werror -std=c++11
+CXXFLAGS := -pthread -pedantic -lstdc++ -I$(INCLUDE) -Wall -std=c++11
 LIB := /usr/local/lib
 
 benchmark: benchmark.cpp
