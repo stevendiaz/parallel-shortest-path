@@ -34,14 +34,14 @@ void CSR::update(int32_t x, int end){
     JA.insert(JA.end(), tempJA.begin(), tempJA.end());
 
     t = clock()-t;
-    cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    //cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
     //Update Value
     for (auto it = tempJA.begin(); it != tempJA.end(); ++it)
         value.push_back(seenNodes[*it]);
 
     t = clock()-t;
-    cout << "Update JA takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    //cout << "Update JA takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
 
     //Update IA
@@ -54,7 +54,7 @@ void CSR::update(int32_t x, int end){
         ++x;
     }
     t = clock()-t;
-    cout << "Update IA  takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    //cout << "Update IA  takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 }
 
 void CSR::phantom_put(int32_t x) {
@@ -63,7 +63,7 @@ void CSR::phantom_put(int32_t x) {
     for (int i = x - 1; i < (int)IA.size(); ++i) {
         IA[i] = new_val;
     }
-    cout << "new val: " << new_val << endl;
+    //cout << "new val: " << new_val << endl;
     //IA[last_index] = new_val;
 }
 /* @param int32_t x: x value in the adjaceny matrix, the from node label
@@ -77,7 +77,7 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
 
     x -= 1;
     y -= 1;
-    cout << "src: " << src << endl;
+    //cout << "src: " << src << endl;
 
     if (x != currSrc) {
         currSrc = x;
