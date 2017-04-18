@@ -19,51 +19,14 @@ CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges
     tempJA = vector<int32_t>();
 }
 
-/* @param int32_t x: x value in the adjaceny matrix, the from node label
- * @param int end: next node with at least one out degree
- * private method:
- *      If the value has been set before, make proper adjustments to
- *      internal datastructures.
- */
-void CSR::update(int32_t x, int end){
-  clock_t t = clock();
-
-
-    //Update JA
-    sort(tempJA.begin(), tempJA.end());
-    JA.insert(JA.end(), tempJA.begin(), tempJA.end());
-
-    t = clock()-t;
-    cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-
-    //Update Value
-    for (auto it = tempJA.begin(); it != tempJA.end(); ++it)
-        value.push_back(seenNodes[*it]);
-
-    t = clock()-t;
-    cout << "Update JA takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-
-
-    //Update IA
-    while(x <= end) {
-        //Update CSR arrays
-        IA.push_back(NNZ);
-
-        //update current source node
-        ++currSrc;
-        ++x;
-    }
-    t = clock()-t;
-    cout << "Update IA  takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-}
 
 void CSR::phantom_put(int32_t x) {
     //int last_index = (int)IA.size() - 1;
-    int32_t new_val = IA[x - 1] + NNZ;
-    for (int i = x - 1; i < (int)IA.size(); ++i) {
+    //Write from the last x position to the end of the array
+    int32_t new_val = IA[currSrc] + NNZ;
+    for (int i = currSrc; i < (int)IA.size(); ++i) {
         IA[i] = new_val;
     }
-    cout << "new val: " << new_val << endl;
     //IA[last_index] = new_val;
 }
 /* @param int32_t x: x value in the adjaceny matrix, the from node label
@@ -73,18 +36,12 @@ void CSR::phantom_put(int32_t x) {
  *      sets the weight of edge x to y to val
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
-  //clock_t t = clock();
-
-    x -= 1;
-    y -= 1;
-    cout << "src: " << src << endl;
-
     if (x != currSrc) {
-        currSrc = x;
         int32_t new_val = IA[x - 1] + NNZ;
-        for(int i = x; i < (int)IA.size(); ++i) {
+        for (int i = currSrc; i <= x; ++i) {
             IA[i] = new_val;
         }
+        currSrc = x;
         value.push_back(val);
         JA.push_back(y);
         NNZ = 1;
@@ -94,29 +51,6 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
         value.push_back(val);
         JA.push_back(y);
     }
-    /*
-    if(relaxMap.find(x) == relaxMap.end()) relaxMap[x] = set<int32_t>({y});
-    else relaxMap[x].insert(y);
-    //t = clock() - t;
-    //cout << "relax map lookup takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-
-    //Skip all 0-outDegree nodes from current source and update current source node
-    if(currSrc < x) {
-        update(currSrc + 1, x);
-        seenNodes = vector<int32_t>(size, -1);
-        tempJA = vector<int32_t>();
-    }
-
-    if(seenNodes[y] == -1){
-        ++NNZ;
-        tempJA.push_back(y);
-        seenNodes[y] = val;
-    } else {
-        if(seenNodes[y] < val) seenNodes[y] = val;
-    }
-    //t = clock() - t;
-    //cout << "update value takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-    */
 }
 
 /*
