@@ -20,7 +20,7 @@ CSR Parser::parseInput(){
         }
     }
     csr.phantom_put(x + 1);
-    csr.debugInfo();
+    //csr.debugInfo();
     //csr.update(++x, size + 1);
 
     return csr;
