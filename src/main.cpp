@@ -19,15 +19,24 @@ int main(){
     int32_t src = 1;
     dist[src] = 0;
 
+    bool changed = true;
+    int count = 0;
     for (int i = 0; i < (int)dist.size(); ++i) {
+        if(!changed) {
+            break;
+        }
+        count++;
+        changed = false;
         vector<vector<int32_t>> graph = csr.iterate();
         for (auto it = graph.begin(); it != graph.end(); ++it) {
-             if(dist[it->at(0)] + it->at(2) < dist[it->at(1)]) {
-                 dist[it->at(1)] = dist[it->at(0)] + it->at(2);
-                 pred[it->at(1)] = it->at(0);
-             }
+            if(dist[it->at(0)] + it->at(2) < dist[it->at(1)]) {
+                dist[it->at(1)] = dist[it->at(0)] + it->at(2);
+                pred[it->at(1)] = it->at(0);
+                changed = true;
+            }
         }
     }
-    cout << "dist[3055]: " << dist[3055] << endl;
+    cout << "dist[5]: " << dist[5] << endl;
+    cout << "count: " << count << endl;
     return 0;
 }
