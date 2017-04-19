@@ -13,21 +13,15 @@ CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges
     IA = vector<int32_t> (size, 0);
     JA = vector<int32_t>();
     currSrc = 1;
-    seenNodes = vector<int32_t > (size, -1);
     nodeLabels = vector<long>(size, INT_MAX);
     relaxMap = map<int32_t, set<int32_t>>();
-    tempJA = vector<int32_t>();
 }
 
-
 void CSR::phantom_put(int32_t x) {
-    //int last_index = (int)IA.size() - 1;
-    //Write from the last x position to the end of the array
     int32_t new_val = IA[currSrc] + NNZ;
     for (int i = currSrc; i < (int)IA.size(); ++i) {
         IA[i] = new_val;
     }
-    //IA[last_index] = new_val;
 }
 /* @param int32_t x: x value in the adjaceny matrix, the from node label
  * @param int32_t y: y value in the adjaceny matrix, the to node label
@@ -52,6 +46,8 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
         JA.push_back(y);
     }
 }
+
+int32_t CSR::getSize(){ return size; }
 
 /*
  * public method:

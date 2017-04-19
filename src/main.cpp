@@ -9,8 +9,8 @@ int main(){
     CSR csr = p.parseInput();
     t = clock() - t;
     cout << "CSR construction takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-    vector<int32_t> dist(csr.size);
-    vector<int32_t> pred(csr.size);
+    vector<int32_t> dist(csr.getSize());
+    vector<int32_t> pred(csr.getSize());
     
     for (int i = 0; i < (int)dist.size(); ++i) {
         dist[i] = numeric_limits<int32_t>::max();

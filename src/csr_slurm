@@ -24,3 +24,5 @@ make csr
 #Execute
 ./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat15.dimacs
 ./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat22.dimacs
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat23.dimacs
