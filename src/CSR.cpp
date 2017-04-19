@@ -13,10 +13,8 @@ CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges
     IA = vector<int32_t> (size, 0);
     JA = vector<int32_t>();
     currSrc = 1;
-    seenNodes = vector<int32_t > (size, -1);
     nodeLabels = vector<long>(size, INT_MAX);
     relaxMap = map<int32_t, set<int32_t>>();
-    tempJA = vector<int32_t>();
 }
 
 void CSR::phantom_put(int32_t x) {
