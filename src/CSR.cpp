@@ -30,16 +30,15 @@ void CSR::phantom_put(int32_t x) {
  *      sets the weight of edge x to y to val
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
-    x -= src;
-    y -= src;
-    if(relaxMap.find(x) == relaxMap.end()) relaxMap[x] = set<int32_t>({y});
-    else relaxMap[x].insert(y);
-
-    //Skip all 0-outDegree nodes from current source and update current source node
-    if(currSrc < x) {
-        update(currSrc + 1, x);
-        seenNodes = vector<int32_t>(size, -1);
-        tempJA = vector<int32_t>();
+    if (x != currSrc) {
+        int32_t new_val = IA[x - 1] + NNZ;
+        for (int i = currSrc; i <= x; ++i) {
+            IA[i] = new_val;
+        }
+        currSrc = x;
+        value.push_back(val);
+        JA.push_back(y);
+        NNZ = 1;
     }
     else {
         ++NNZ;
@@ -47,6 +46,8 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
         JA.push_back(y);
     }
 }
+
+int32_t CSR::getSize(){ return size; }
 
 /*
  * public method:
