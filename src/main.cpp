@@ -3,12 +3,12 @@
 #include <limits>
 
 int main(){
-    clock_t t = clock();
+//    clock_t t = clock();
 
-    Parser p = Parser();
+    Parser p = Parser(1);
     CSR csr = p.parseInput();
-    t = clock() - t;
-    cout << "CSR construction takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+//    t = clock() - t;
+//    cout << "CSR construction takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
     vector<int32_t> dist(csr.getSize());
     vector<int32_t> pred(csr.getSize());
     
@@ -16,7 +16,7 @@ int main(){
         dist[i] = numeric_limits<int32_t>::max();
         pred[i] = 0;
     }
-    int32_t src = 1;
+    int32_t src = csr.getSrc();
     dist[src] = 0;
 
     for (int i = 0; i < (int)dist.size(); ++i) {
