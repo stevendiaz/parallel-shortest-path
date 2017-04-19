@@ -18,7 +18,15 @@ CSR Parser::parseInput(){
             csr.put(x, y, val);
         }
     }
-    csr.update(++x, size + 1);
+    csr.phantom_put(x + 1);
+    /*csr.debugInfo();
+    vector<vector<int32_t>> graph = csr.iterate();
+    for(auto it = graph.begin(); it != graph.end(); ++it) {
+        for(auto iit = it->begin(); iit != it->end(); ++iit) {
+            cout << *iit << " ";
+        }
+        cout << endl;
+	}*/
 
     return csr;
 }

@@ -10,7 +10,7 @@
 CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges(numEdges), src(src - 1), currSrc(1), NNZ(0) {
     size += 1;
     value = vector<int32_t>();
-    IA = vector<int32_t>({0, 0});
+    IA = vector<int32_t> (size, 0);
     JA = vector<int32_t>();
     currSrc = 1;
     seenNodes = vector<int32_t > (size, -1);
@@ -19,47 +19,12 @@ CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges
     tempJA = vector<int32_t>();
 }
 
-/* @param int32_t x: x value in the adjaceny matrix, the from node label
- * @param int end: next node with at least one out degree
- * private method:
- *      If the value has been set before, make proper adjustments to
- *      internal datastructures.
- */
-void CSR::update(int32_t x, int end){
-  clock_t t = clock();
-
-
-    //Update JA
-    sort(tempJA.begin(), tempJA.end());
-    JA.insert(JA.end(), tempJA.begin(), tempJA.end());
-    t = clock() - t;
-    cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-
-
-    t = clock()-t;
-    cout << "Sort and insert takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-
-    //Update Value
-    for (auto it = tempJA.begin(); it != tempJA.end(); ++it)
-        value.push_back(seenNodes[*it]);
-
-    t = clock()-t;
-    cout << "Update JA takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-
-
-    //Update IA
-    while(x <= end) {
-        //Update CSR arrays
-        IA.push_back(NNZ);
-
-        //update current source node
-        ++currSrc;
-        ++x;
+void CSR::phantom_put(int32_t x) {
+    int32_t new_val = IA[currSrc] + NNZ;
+    for (int i = currSrc; i < (int)IA.size(); ++i) {
+        IA[i] = new_val;
     }
-    t = clock()-t;
-    cout << "Update IA  takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 }
-
 /* @param int32_t x: x value in the adjaceny matrix, the from node label
  * @param int32_t y: y value in the adjaceny matrix, the to node label
  * @param int32_t val: the weight in the adjaceny matrix
@@ -67,13 +32,10 @@ void CSR::update(int32_t x, int end){
  *      sets the weight of edge x to y to val
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
-  //clock_t t = clock();
     x -= src;
     y -= src;
     if(relaxMap.find(x) == relaxMap.end()) relaxMap[x] = set<int32_t>({y});
     else relaxMap[x].insert(y);
-    //t = clock() - t;
-    //cout << "relax map lookup takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
     //Skip all 0-outDegree nodes from current source and update current source node
     if(currSrc < x) {
@@ -81,16 +43,11 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
         seenNodes = vector<int32_t>(size, -1);
         tempJA = vector<int32_t>();
     }
-
-    if(seenNodes[y] == -1){
+    else {
         ++NNZ;
-        tempJA.push_back(y);
-        seenNodes[y] = val;
-    } else {
-        if(seenNodes[y] < val) seenNodes[y] = val;
+        value.push_back(val);
+        JA.push_back(y);
     }
-    //t = clock() - t;
-    //cout << "update value takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 }
 
 /*
@@ -105,7 +62,7 @@ vector <vector<int32_t>> CSR::iterate() {
         int32_t currentRowIndex = 0;
 
         while (currentRowIndex < IA[i] - IA[i - 1]) {
-            int32_t rowVal = i - 1 + src;
+            int32_t rowVal = i + src;
             int32_t colVal = JA[IA[i - 1] + currentRowIndex] + src;
             int32_t realVal = value[IA[i - 1] + currentRowIndex];
 
