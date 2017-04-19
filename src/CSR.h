@@ -23,16 +23,14 @@ private:
     vector<int32_t> value;
     vector<int32_t> IA;
     vector<int32_t> JA;
-    vector<int32_t> seenNodes;
     int32_t currSrc;
-    int32_t currNNZ;
     int32_t NNZ;
     vector<long> nodeLabels;
-    vector<int32_t> tempJA;
     map<int32_t, set<int32_t>> relaxMap;
 
 public:
     CSR (int32_t size, int32_t edge, int32_t source);
+    int32_t getSize();
     void put(int32_t x, int32_t y, int32_t val);
     void phantom_put(int32_t x);
     vector<vector<int32_t>> iterate();
@@ -43,7 +41,6 @@ public:
     void debugInfo();
     bool nodeFullyRelaxed(int32_t node);
     void relaxNode(int32_t src, int32_t dest);
-    void update(int32_t x, int32_t end);
     void to_dimacs();
 };
 
