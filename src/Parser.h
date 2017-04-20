@@ -11,11 +11,8 @@ const int MAX_CHARS_PER_LINE = 512;
 using namespace std;
 
 class Parser{
-private:
-    int32_t src;
-
 public:
-    Parser(int32_t sourceNode);
+    Parser();
     CSR parseInput();
 };
 

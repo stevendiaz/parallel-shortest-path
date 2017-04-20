@@ -7,6 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include <ctime>
+#include <cassert>
 
 #ifndef CSR_h
 #define CSR_h
@@ -19,17 +20,18 @@ class CSR {
 private:
     int32_t size;
     int32_t numEdges;
-    int32_t src;
     vector<int32_t> value;
     vector<int32_t> IA;
     vector<int32_t> JA;
     int32_t currSrc;
     int32_t NNZ;
+    vector<int32_t> seenNodes;
+    vector<int32_t> indexInValue;
     vector<long> nodeLabels;
     map<int32_t, set<int32_t>> relaxMap;
 
 public:
-    CSR (int32_t size, int32_t edge, int32_t source);
+    CSR (int32_t size, int32_t edge);
     int32_t getSize();
     int32_t getSrc();
     void put(int32_t x, int32_t y, int32_t val);
