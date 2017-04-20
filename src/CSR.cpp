@@ -75,7 +75,7 @@ vector <vector<int32_t>> CSR::iterate() {
     for (size_t i = 1; i < IA.size(); ++i) {
         int32_t currentRowIndex = 0;
 
-        for(size_t j = IA[i-1]; j < IA[i]; ++j){
+        for(int j = IA[i-1]; j < IA[i]; ++j){
             int32_t rowVal = i;
             int32_t colVal = JA[IA[i - 1] + currentRowIndex];
             int32_t val = value[IA[i - 1] + currentRowIndex];
