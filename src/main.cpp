@@ -8,87 +8,89 @@ struct atom;
 
 vector<atom> a_dist;
 
-bool changed = true;
+atomic<bool> changed{true};
+
+pthread_barrier_t mybarrier;
+
+//bool changed = true;
 
 struct args_s {
-  int thread_number;
-  vector<vector<int32_t>> *graph;
+    int thread_number;
+    vector<vector<int32_t>> *graph;
 };
 
-
 struct atom {
-  atomic<int32_t>* val;
+    atomic<int32_t>* val;
 };
 
 void* relax(void *args) {
-  args_s values = *(args_s *)args;
-  
-  for(auto it = values.graph->begin() + values.thread_number; it < values.graph->end(); it += MAX_THREADS) {
-
-  
-    int32_t oldWeight = a_dist[it->at(1)].val->load();
-    int32_t newWeight = a_dist[it->at(0)].val->load() + it->at(2);
-    
-    if(newWeight < oldWeight) {   
-       while(!a_dist[it->at(1)].val->compare_exchange_weak(oldWeight, newWeight));
-
-       changed = true;
-   }
-}
-pthread_exit(NULL);
+    args_s values = *(args_s *)args;
+    for(auto it = values.graph->begin() + values.thread_number; it < values.graph->end(); it += MAX_THREADS) {
+        int32_t oldWeight = a_dist[it->at(1)].val->load();
+        int32_t newWeight = a_dist[it->at(0)].val->load();
+        if(newWeight + it->at(2) < oldWeight && newWeight != INT_MAX) {
+            changed.store(true, memory_order_seq_cst);
+            while(!a_dist[it->at(1)].val->compare_exchange_weak(oldWeight,newWeight + it->at(2)));
+        }
+    }
+    pthread_barrier_wait(&mybarrier);
+    pthread_exit(NULL);
 }
 
 void bellman_ford_parallel(CSR csr, int32_t src) {
     pthread_t p_threads[MAX_THREADS];
     pthread_attr_t attr;
     pthread_attr_init (&attr);
+    pthread_barrier_init(&mybarrier, NULL, MAX_THREADS + 1);
 
     clock_t t = clock();
     a_dist = vector<atom>();
 
     for (int i = 0; i < (int)csr.getSize(); ++i) {
-
        atom temp;
        temp.val = new atomic<int32_t>{INT_MAX};
        a_dist.push_back(temp);
-   }
-   a_dist[src].val->store(0);
+    }
+    a_dist[src].val->store(0);
 
-   int count = 0;
-   cout << "Bellman Ford Parallel with " << MAX_THREADS << " threads." << endl;
-   for (int i = 0; i < (int)csr.getSize(); ++i) {
-    if(!changed) {
-        break;
+    atomic<int> count {0};
+    cout << "Bellman Ford Parallel with " << MAX_THREADS << " threads." << endl;
+    for (int i = 0; i < (int)csr.getSize(); ++i) {
+        if(!changed.load()) {
+            break;
+        }
+        count++;
+        bool temp = changed.load();
+        changed.compare_exchange_weak(temp, false);
+        vector<vector<int32_t>> graph = csr.iterate();
+        for (int j = 0; j < MAX_THREADS; ++j) {
+            args_s* args = new args_s();
+            args->thread_number = j;
+            args->graph = &graph;
+            pthread_create(&p_threads[j], &attr, relax, (void *)args);
+        }
+        pthread_barrier_wait(&mybarrier);
+        for(int j = 0; j < MAX_THREADS; ++j) {
+            pthread_join(p_threads[j], NULL);
+        }
     }
-    count++;
-    changed = false;
-    vector<vector<int32_t>> graph = csr.iterate();
-    for (int j = 0; j < MAX_THREADS; ++j) {
-        args_s* args = new args_s();
-        args->thread_number = j;
-        args->graph = &graph;
-        pthread_create(&p_threads[j], &attr, relax, (void *)args);
-    }
-    for(int j = 0; j < MAX_THREADS; ++j) {
-        pthread_join(p_threads[j], NULL);
-    }
-}
+    pthread_barrier_destroy(&mybarrier);
 
-t = clock() - t;
-cout << "Convergence count: " << count << endl;
-cout << "Bellman Ford with " << MAX_THREADS << "threads took " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    t = clock() - t;
+    cout << "Convergence count: " << count.load() << endl;
+    cout << "Bellman Ford with " << MAX_THREADS << "threads took " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
-bool print = true;
-if (print) {
-  for(int i = 0; i < (int)csr.getSize(); ++i) {
-    if(a_dist[i].val->load() == INT_MAX) {
-        cout << i << " INF" << endl;
+    bool print = false;
+    if (print) {
+        for(int i = 0; i < (int)csr.getSize(); ++i) {
+            if(a_dist[i].val->load() == INT_MAX) {
+                cout << i << " INF" << endl;
+            }
+            else {
+                cout << i << " " << a_dist[i].val->load() << endl;
+            }
+        }
     }
-    else {
-        cout << i << " " << a_dist[i].val->load() << endl;
-    }
-}
-}
 }
 
 
@@ -125,15 +127,15 @@ void bellman_ford_sequential(CSR csr, int32_t src) {
     cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl; 
     bool print = false;
     if (print) {
-      for(int i = 0; i < (int)dist.size(); ++i) {
-        if(dist[i] == numeric_limits<int32_t>::max()) {
-            cout << i << " INF" << endl;
-        }
-        else {
-            cout << i << " " << dist[i] << endl;
+        for(int i = 0; i < (int)dist.size(); ++i) {
+            if(dist[i] == numeric_limits<int32_t>::max()) {
+                cout << i << " INF" << endl;
+            }
+            else {
+                cout << i << " " << dist[i] << endl;
+            }
         }
     }
-}
 }
 
 int main(){
