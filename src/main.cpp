@@ -3,22 +3,19 @@
 #include <limits>
 
 int main(){
-    clock_t t = clock();
+//    clock_t t = clock();
 
-    Parser p = Parser();
+    Parser p = Parser(1);
     CSR csr = p.parseInput();
 
-    //csr.debugInfo();
-    //csr.to_dimacs();
-
-    vector<int32_t> dist(csr.getSize());
+  vector<int32_t> dist(csr.getSize());
     vector<int32_t> pred(csr.getSize());
 
     for (int i = 0; i < (int)dist.size(); ++i) {
         dist[i] = numeric_limits<int32_t>::max();
         pred[i] = 0;
     }
-    int32_t src = 1;
+    int32_t src = csr.getSrc();
     dist[src] = 0;
 
     bool changed = true;
@@ -40,9 +37,7 @@ int main(){
         }
     }
     t = clock() - t;
-    //cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-    //cout << "dist[3055]: " << dist[3055] << endl;
-    //cout << "count: " << count << endl;
+   
     for(int i = 0; i < dist.size(); ++i) {
         if(dist[i] == numeric_limits<int32_t>::max()) {
             cout << i << " INF" << endl;

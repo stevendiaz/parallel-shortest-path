@@ -1,8 +1,8 @@
 #include "Parser.h"
 
 
-Parser::Parser() = default;
 
+Parser::Parser() = default;
 CSR Parser::parseInput(){
     //Extract info from first line
     string s;

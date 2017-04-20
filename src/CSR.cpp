@@ -7,6 +7,7 @@
  * @param int32_t src: Source node of graph
  * @return CSR : an empty compressed sparse row object
  */
+
 CSR::CSR(int32_t size, int32_t numEdges) : size(size + 1), numEdges(numEdges), currSrc(1), NNZ(0) {
     size += 1;
     value = vector<int32_t>();
@@ -18,6 +19,10 @@ CSR::CSR(int32_t size, int32_t numEdges) : size(size + 1), numEdges(numEdges), c
     nodeLabels = vector<long>(size, INT_MAX);
     relaxMap = map<int32_t, set<int32_t>>();
 }
+
+int32_t CSR::getSize(){ return size; }
+
+int32_t CSR::getSrc() { return src; }
 
 void CSR::phantom_put(int32_t x) {
     int32_t new_val = IA[currSrc] + NNZ;
@@ -60,8 +65,6 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
         }
     }
 }
-
-int32_t CSR::getSize(){ return size; }
 
 /*
  * public method:
