@@ -3,12 +3,12 @@
 #include <limits>
 
 int main(){
-//    clock_t t = clock();
+    clock_t t = clock();
 
     Parser p = Parser(1);
     CSR csr = p.parseInput();
 
-  vector<int32_t> dist(csr.getSize());
+    vector<int32_t> dist(csr.getSize());
     vector<int32_t> pred(csr.getSize());
 
     for (int i = 0; i < (int)dist.size(); ++i) {
@@ -20,7 +20,7 @@ int main(){
 
     bool changed = true;
     int count = 0;
-    //cout << "Starting Bellman-Ford sequential" << endl;
+
     for (int i = 0; i < (int)dist.size(); ++i) {
         if(!changed) {
             break;
@@ -37,6 +37,8 @@ int main(){
         }
     }
     t = clock() - t;
+    cout << "Bellman Ford took " << ((float)x)/CLOCKS_PER_SEC << " seconds" << endl;
+
    
     for(int i = 0; i < dist.size(); ++i) {
         if(dist[i] == numeric_limits<int32_t>::max()) {
