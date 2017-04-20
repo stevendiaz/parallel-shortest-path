@@ -2,10 +2,9 @@
 #include "Parser.h"
 #include <limits>
 #include <pthread.h>
-#define MAX_THREADS 2
+#define MAX_THREADS 1
 
 vector<int32_t> p_dist;
-vector<int32_t> p_pred;
 bool changed = true;
 
 struct args_s {
@@ -18,27 +17,23 @@ void* relax(void *args) {
     for(auto it = values.graph->begin() + values.thread_number; it < values.graph->end(); it += MAX_THREADS) {
       if(p_dist[it->at(0)] + it->at(2) < p_dist[it->at(1)]) {
             p_dist[it->at(1)] = p_dist[it->at(0)] + it->at(2);
-            p_pred[it->at(1)] = it->at(0);
             changed = true;
         }
     }
     pthread_exit(NULL);
 }
 
-void bellman_ford_parallel(CSR csr, const int MACS_THREADS) {
+void bellman_ford_parallel(CSR csr, int32_t src) {
     pthread_t p_threads[MAX_THREADS];
     pthread_attr_t attr;
     pthread_attr_init (&attr);
 
     clock_t t = clock();
     p_dist = vector<int32_t>(csr.getSize());
-    p_pred = vector<int32_t>(csr.getSize());
-
+   
     for (int i = 0; i < (int)p_dist.size(); ++i) {
         p_dist[i] = numeric_limits<int32_t>::max();
-        p_pred[i] = 0;
     }
-    int32_t src = 1;
     p_dist[src] = 0;
 
     int count = 0;
@@ -79,17 +74,13 @@ void bellman_ford_parallel(CSR csr, const int MACS_THREADS) {
 }
 
 
-void bellman_ford_sequential(CSR csr) {
+void bellman_ford_sequential(CSR csr, int32_t src) {
     clock_t t = clock();
     /* Begin Bellman Ford algorithm */
     vector<int32_t> dist (csr.getSize());
-    vector<int32_t> pred (csr.getSize());
     for(int i = 0; i < (int)dist.size(); ++i) {
         dist[i] = numeric_limits<int32_t>::max();
-        pred[i] = 0;
     }
-
-    int32_t src = 1;
     dist[src] = 0;
 
     int count = 0;
@@ -104,7 +95,6 @@ void bellman_ford_sequential(CSR csr) {
         for (auto it = graph.begin(); it != graph.end(); ++it) {
             if(dist[it->at(0)] + it->at(2) < dist[it->at(1)]) {
                 dist[it->at(1)] = dist[it->at(0)] + it->at(2);
-                pred[it->at(1)] = it->at(0);
                 changed = true;
             }
         }
