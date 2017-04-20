@@ -22,8 +22,6 @@ CSR::CSR(int32_t size, int32_t numEdges) : size(size + 1), numEdges(numEdges), c
 
 int32_t CSR::getSize(){ return size; }
 
-int32_t CSR::getSrc() { return src; }
-
 void CSR::phantom_put(int32_t x) {
     int32_t new_val = IA[currSrc] + NNZ;
     for (int i = currSrc; i < (int)IA.size(); ++i) {

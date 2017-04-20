@@ -33,7 +33,6 @@ private:
 public:
     CSR (int32_t size, int32_t edge);
     int32_t getSize();
-    int32_t getSrc();
     void put(int32_t x, int32_t y, int32_t val);
     void phantom_put(int32_t x);
     vector<vector<int32_t>> iterate();

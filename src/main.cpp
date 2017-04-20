@@ -5,7 +5,7 @@
 int main(){
     clock_t t = clock();
 
-    Parser p = Parser(1);
+    Parser p = Parser();
     CSR csr = p.parseInput();
 
     vector<int32_t> dist(csr.getSize());
@@ -15,7 +15,7 @@ int main(){
         dist[i] = numeric_limits<int32_t>::max();
         pred[i] = 0;
     }
-    int32_t src = csr.getSrc();
+    int32_t src = 1;
     dist[src] = 0;
 
     bool changed = true;
@@ -37,7 +37,7 @@ int main(){
         }
     }
     t = clock() - t;
-    cout << "Bellman Ford took " << ((float)x)/CLOCKS_PER_SEC << " seconds" << endl;
+    cout << "Bellman Ford took " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
    
     for(int i = 0; i < dist.size(); ++i) {
