@@ -9,8 +9,8 @@ benchmark: benchmark.cpp
 pi: pi.cpp
 	$(CXX) $(CXXFLAGS) pi.cpp -o pi.out
 
-csr: main.cpp CSR.cpp Parser.cpp
-	$(CXX) $(CXXFLAGS) main.cpp CSR.cpp Parser.cpp -o csr.o
+bellman: main.cpp CSR.cpp Parser.cpp
+	$(CXX) $(CXXFLAGS) main.cpp CSR.cpp Parser.cpp -o bellman.o
 
 clean:
 	rm *~

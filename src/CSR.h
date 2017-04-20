@@ -2,12 +2,11 @@
 #include <climits>
 #include <utility>
 #include <vector>
-#include <map>
 #include <set>
 #include <iostream>
 #include <algorithm>
 #include <ctime>
-#include <cassert>
+#include <atomic>
 
 #ifndef CSR_h
 #define CSR_h
@@ -28,8 +27,7 @@ private:
     vector<int32_t> seenNodes;
     vector<int32_t> indexInValue;
     vector<long> nodeLabels;
-    map<int32_t, set<int32_t>> relaxMap;
-
+    
 public:
     CSR (int32_t size, int32_t edge);
     int32_t getSize();
@@ -37,12 +35,7 @@ public:
     void phantom_put(int32_t x);
     vector<vector<int32_t>> iterate();
     void printNodeLabels();
-    int32_t getLargestOutDegree();
-    long getTent(int32_t u);
-    void setTent(int32_t u, long val);
     void debugInfo();
-    bool nodeFullyRelaxed(int32_t node);
-    void relaxNode(int32_t src, int32_t dest);
     void to_dimacs();
 };
 
