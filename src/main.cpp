@@ -7,11 +7,9 @@ int main(){
 
     Parser p = Parser();
     CSR csr = p.parseInput();
-    t = clock() - t;
-    cout << "CSR construction takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
     vector<int32_t> dist(csr.getSize());
     vector<int32_t> pred(csr.getSize());
-    
+
     for (int i = 0; i < (int)dist.size(); ++i) {
         dist[i] = numeric_limits<int32_t>::max();
         pred[i] = 0;
@@ -21,6 +19,7 @@ int main(){
 
     bool changed = true;
     int count = 0;
+    cout << "Starting Bellman-Ford sequential" << endl;
     for (int i = 0; i < (int)dist.size(); ++i) {
         if(!changed) {
             break;
@@ -36,7 +35,9 @@ int main(){
             }
         }
     }
-    cout << "dist[5]: " << dist[5] << endl;
+    t = clock() - t;
+    cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    cout << "dist[3055]: " << dist[3055] << endl;
     cout << "count: " << count << endl;
     return 0;
 }

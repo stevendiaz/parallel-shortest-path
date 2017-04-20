@@ -13,6 +13,7 @@ CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges
     IA = vector<int32_t> (size, 0);
     JA = vector<int32_t>();
     currSrc = 1;
+    seenNodes = vector<int32_t > (size + 1, -1);
     nodeLabels = vector<long>(size, INT_MAX);
     relaxMap = map<int32_t, set<int32_t>>();
 }
@@ -31,6 +32,7 @@ void CSR::phantom_put(int32_t x) {
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
     if (x != currSrc) {
+        seenNodes = vector<int32_t> (size + 1, -1);
         int32_t new_val = IA[x - 1] + NNZ;
         for (int i = currSrc; i <= x; ++i) {
             IA[i] = new_val;
@@ -38,12 +40,16 @@ void CSR::put(int32_t x, int32_t y, int32_t val) {
         currSrc = x;
         value.push_back(val);
         JA.push_back(y);
+        seenNodes[y] = val;
         NNZ = 1;
     }
     else {
-        ++NNZ;
-        value.push_back(val);
-        JA.push_back(y);
+        if(seenNodes[y] < val) {
+            ++NNZ;
+            value.push_back(val);
+            JA.push_back(y);
+            seenNodes[y] = val;
+        }
     }
 }
 
