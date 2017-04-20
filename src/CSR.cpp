@@ -7,13 +7,14 @@
  * @param int32_t src: Source node of graph
  * @return CSR : an empty compressed sparse row object
  */
-CSR::CSR(int32_t size, int32_t numEdges, int32_t src) : size(size + 1), numEdges(numEdges), src(src - 1), currSrc(1), NNZ(0) {
+CSR::CSR(int32_t size, int32_t numEdges) : size(size + 1), numEdges(numEdges), currSrc(1), NNZ(0) {
     size += 1;
     value = vector<int32_t>();
     IA = vector<int32_t> (size, 0);
     JA = vector<int32_t>();
     currSrc = 1;
     seenNodes = vector<int32_t > (size + 1, -1);
+    indexInValue = vector<int32_t > (size + 1, -1);
     nodeLabels = vector<long>(size, INT_MAX);
     relaxMap = map<int32_t, set<int32_t>>();
 }
@@ -31,24 +32,31 @@ void CSR::phantom_put(int32_t x) {
  *      sets the weight of edge x to y to val
  */
 void CSR::put(int32_t x, int32_t y, int32_t val) {
-    if (x != currSrc) {
+    if (currSrc < x) {
         seenNodes = vector<int32_t> (size + 1, -1);
-        int32_t new_val = IA[x - 1] + NNZ;
+        indexInValue = vector<int32_t> (size + 1, -1);
+        int32_t new_val = IA[currSrc] + NNZ;
         for (int i = currSrc; i <= x; ++i) {
             IA[i] = new_val;
         }
         currSrc = x;
         value.push_back(val);
         JA.push_back(y);
+        indexInValue[y] = value.size() - 1;
         seenNodes[y] = val;
         NNZ = 1;
     }
-    else {
-        if(seenNodes[y] < val) {
+    else if(seenNodes[y] < val) {
+        if(seenNodes[y] == -1){
             ++NNZ;
             value.push_back(val);
             JA.push_back(y);
             seenNodes[y] = val;
+            indexInValue[y] = value.size() - 1;
+        }
+        else {
+            seenNodes[y] = val;
+            value[indexInValue[y]] = val;
         }
     }
 }
@@ -66,12 +74,12 @@ vector <vector<int32_t>> CSR::iterate() {
     for (size_t i = 1; i < IA.size(); ++i) {
         int32_t currentRowIndex = 0;
 
-        while (currentRowIndex < IA[i] - IA[i - 1]) {
-            int32_t rowVal = i + src;
-            int32_t colVal = JA[IA[i - 1] + currentRowIndex] + src;
-            int32_t realVal = value[IA[i - 1] + currentRowIndex];
+        for(size_t j = IA[i-1]; j < IA[i]; ++j){
+            int32_t rowVal = i;
+            int32_t colVal = JA[IA[i - 1] + currentRowIndex];
+            int32_t val = value[IA[i - 1] + currentRowIndex];
 
-            vector <int32_t> pairing{rowVal, colVal, realVal};
+            vector <int32_t> pairing{rowVal, colVal, val};
             result.push_back(pairing);
             ++currentRowIndex;
         }

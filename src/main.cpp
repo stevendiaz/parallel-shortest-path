@@ -8,7 +8,8 @@ int main(){
     Parser p = Parser();
     CSR csr = p.parseInput();
 
-    csr.to_dimacs();
+    //csr.debugInfo();
+    //csr.to_dimacs();
 
     vector<int32_t> dist(csr.getSize());
     vector<int32_t> pred(csr.getSize());
@@ -42,13 +43,13 @@ int main(){
     //cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
     //cout << "dist[3055]: " << dist[3055] << endl;
     //cout << "count: " << count << endl;
-    /*for(int i = 0; i < dist.size(); ++i) {
+    for(int i = 0; i < dist.size(); ++i) {
         if(dist[i] == numeric_limits<int32_t>::max()) {
             cout << i << " INF" << endl;
         }
         else {
             cout << i << " " << dist[i] << endl;
         }
-	}*/
+	}
     return 0;
 }
