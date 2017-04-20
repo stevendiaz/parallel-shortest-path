@@ -9,7 +9,7 @@
 #-----------------------------------------------------------------
 
 #SBATCH -J csr           # Job name
-#SBATCH -o csr%j.out    # Specify stdout output file (%j expands to jobId)
+#SBATCH -o bellford.out    # Specify stdout output file (%j expands to jobId)
 #SBATCH -p development           # Queue name
 #SBATCH -N 1                     # Total number of nodes requested (16 cores/node)
 #SBATCH -n 1                     # Total number of tasks
@@ -22,7 +22,7 @@ module load gcc/4.9.3
 make csr
 
 #Execute
-./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat15.dimacs
-#./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs
-#./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat22.dimacs
-#./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat23.dimacs
+#./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat15.dimacs
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat22.dimacs
+./csr.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat23.dimacs

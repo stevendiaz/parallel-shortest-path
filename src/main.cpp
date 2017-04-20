@@ -36,17 +36,22 @@ int main(){
             }
         }
     }
+    vector<vector<int32_t>> graph = csr.iterate();
+    cout << "count at the end is " << count << endl;
+    long long max_iterations = dist.size() * graph.size();
+    cout << "max iterations: " << max_iterations << " %: " << count/max_iterations << endl;
+    
     t = clock() - t;
     cout << "Bellman Ford took " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
    
-    for(int i = 0; i < dist.size(); ++i) {
+    /* for(int i = 0; i < dist.size(); ++i) {
         if(dist[i] == numeric_limits<int32_t>::max()) {
             cout << i << " INF" << endl;
         }
         else {
             cout << i << " " << dist[i] << endl;
         }
-	}
+	}*/
     return 0;
 }
