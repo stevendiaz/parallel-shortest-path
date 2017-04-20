@@ -1,0 +1,30 @@
+#!/bin/bash
+#-----------------------------------------------------------------
+# Example SLURM job script to run serial applications on TACC's
+# Stampede system.
+#
+# This script requests one core (out of 16) on one node. The job
+# will have access to all the memory in the node.  Note that this
+# job will be charged as if all 16 cores were requested.
+#-----------------------------------------------------------------
+
+#SBATCH -J FLAbellman-p          # Job name
+#SBATCH -o bellman%j.out    # Specify stdout output file (%j expands to jobId)
+#SBATCH -p serial           # Queue name
+#SBATCH -N 1                     # Total number of nodes requested (16 cores/node)
+#SBATCH -n 1                     # Total number of tasks
+#SBATCH -t 02:00:00              # Run time
+
+# Load any necessary module
+module load gcc/4.9.3
+
+#Compile
+make bellman
+
+#Execute
+
+#./bellman.o < /work/01131/rashid/class-inputs/road/road-NY.dimacs > ../output/road_NY.sequential_timing
+#./bellman.o < /work/01131/rashid/class-inputs/road/road-FLA.dimacs > ../output/road_FLA.sequential_timing
+
+#./bellman.o < /work/01131/rashid/class-inputs/road/road-NY.dimacs > ../output/road_NY.parallel_timing
+./bellman.o < /work/01131/rashid/class-inputs/road/road-FLA.dimacs > ../output/road_FLA.parallel_timing
