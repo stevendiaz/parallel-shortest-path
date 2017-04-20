@@ -19,7 +19,7 @@ int main(){
 
     bool changed = true;
     int count = 0;
-    cout << "Starting Bellman-Ford sequential" << endl;
+    //cout << "Starting Bellman-Ford sequential" << endl;
     for (int i = 0; i < (int)dist.size(); ++i) {
         if(!changed) {
             break;
@@ -36,8 +36,16 @@ int main(){
         }
     }
     t = clock() - t;
-    cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
-    cout << "dist[3055]: " << dist[3055] << endl;
-    cout << "count: " << count << endl;
+    //cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    //cout << "dist[3055]: " << dist[3055] << endl;
+    //cout << "count: " << count << endl;
+    for(int i = 0; i < dist.size(); ++i) {
+        if(dist[i] == numeric_limits<int32_t>::max()) {
+            cout << i << " INF" << endl;
+        }
+        else {
+            cout << i << " " << dist[i] << endl;
+        }
+    }
     return 0;
 }
