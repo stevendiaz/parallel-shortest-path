@@ -17,7 +17,6 @@ CSR::CSR(int32_t size, int32_t numEdges) : size(size + 1), numEdges(numEdges), c
     seenNodes = vector<int32_t > (size + 1, -1);
     indexInValue = vector<int32_t > (size + 1, -1);
     nodeLabels = vector<long>(size, INT_MAX);
-    relaxMap = map<int32_t, set<int32_t>>();
 }
 
 int32_t CSR::getSize(){ return size; }
@@ -108,18 +107,6 @@ void CSR::printNodeLabels() {
 *      gets the tentative cost of node u
 * @return long: tentative cost of node u
 */
-long CSR::getTent(int32_t u) {
-    return nodeLabels[u];
-}
-
-/* @param int32_t u: node id
- * @param int32_t v: tentative cost to be set
- * public method:
- *      sets the weight of edge x to y to val
- */
-void CSR::setTent(int32_t u, long val) {
-    nodeLabels[u] = val;
-}
 
 /*
  * public method:
@@ -142,45 +129,7 @@ void CSR::debugInfo() {
     cout << endl;
 }
 
-
-/*
- * public method:
- *      gets the node with the largest outdegree
- * @return int32_t: node with the largest out degree
- */
-int32_t CSR::getLargestOutDegree() {
-    int32_t oldDegree = -1;
-    int32_t row = -1;
-
-    for (int i = 0; i < size; ++i) {
-        int32_t currDegree = IA[i + 1] - IA[i];
-        if (currDegree > oldDegree) {
-            row = i;
-            oldDegree = currDegree;
-        }
-    }
-    return row;
-}
-
-/* @param int32_t node: node id
- * public method:
- *      checks if node has had all it's edges relaxed
- * @return bool: true if all edges have been relax, false otherwise
- */
-bool CSR::nodeFullyRelaxed(int32_t node){
-    return relaxMap[node].size() == 0;
-}
-
-/* @param int32_t src: to edge
- * @param int32_t dest: from edge
- * public method:
- *      sets edge src->dest as relaxed
- */
-void CSR::relaxNode(int32_t src, int32_t dest){
-    if(relaxMap[src].find(dest) != relaxMap[src].end())
-        relaxMap[src].erase(dest);
-}
-
+ 
 void CSR::to_dimacs() {
     cout << "p sp " << size - 1 << " " <<  numEdges << endl;
 
