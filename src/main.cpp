@@ -149,11 +149,11 @@ int main(){
 
     //road-NY
     //bellman_ford_sequential(csr, 140961);
-    //bellman_ford_parallel(csr, 140961);
+    bellman_ford_parallel(csr, 140961);
 
     //road-FLA
     //bellman_ford_sequential(csr, 316607);
-    bellman_ford_parallel(csr, 316607);
+    //bellman_ford_parallel(csr, 316607);
     
     return 0;
 }
