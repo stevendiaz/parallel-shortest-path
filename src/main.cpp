@@ -2,6 +2,7 @@
 #include "Parser.h"
 #include <limits>
 #include <pthread.h>
+
 #define MAX_THREADS 8
 
 struct atom;
@@ -123,8 +124,7 @@ void bellman_ford_sequential(CSR csr, int32_t src) {
 
     /* Output and debug info */
     t = clock() - t;
-    cout << "Convergence count: " << count << endl;
-    cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl; 
+   cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl; 
     bool print = false;
     if (print) {
         for(int i = 0; i < (int)dist.size(); ++i) {
@@ -145,11 +145,11 @@ int main(){
     
     //rmats
     //bellman_ford_sequential(csr, 1);
-    //bellman_ford_parallel(csr, 1);
+    bellman_ford_parallel(csr, 1);
 
     //road-NY
     //bellman_ford_sequential(csr, 140961);
-    bellman_ford_parallel(csr, 140961);
+    //bellman_ford_parallel(csr, 140961);
 
     //road-FLA
     //bellman_ford_sequential(csr, 316607);

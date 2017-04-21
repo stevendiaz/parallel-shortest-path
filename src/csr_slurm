@@ -8,11 +8,11 @@
 # job will be charged as if all 16 cores were requested.
 #-----------------------------------------------------------------
 
-#SBATCH -J STbellman          # Job name
-#SBATCH -o bellman%j.out    # Specify stdout output file (%j expands to jobId)
-#SBATCH -p serial           # Queue name
+#SBATCH -J 15bellman          # Job name
+#SBATCH -o bellman15%j.out    # Specify stdout output file (%j expands to jobId)
+#SBATCH -p development           # Queue name
 #SBATCH -N 1                     # Total number of nodes requested (16 cores/node)
-#SBATCH -n 1                     # Total number of tasks
+#SBATCH -n 8                     # Total number of tasks
 #SBATCH -t 02:00:00              # Run time
 
 # Load any necessary module
@@ -23,7 +23,7 @@ make bellman
 
 #Execute
 
-#./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat15.dimacs
-./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs > ../output/rmat20.sequential_timing
-./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat22.dimacs > ../output/rmat22.sequential_timing
-./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat23.dimacs > ../output/rmat23.sequential_timing
+./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat15.dimacs > ../output/rmat15_timing
+#./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat20.dimacs > ../output/rmat20.sequential_timing
+#./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat22.dimacs > ../output/rmat22.sequential_timing
+#./bellman.o < /work/01131/rashid/class-inputs/rmat_graphs/rmat23.dimacs > ../output/rmat23.sequential_timing
