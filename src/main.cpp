@@ -77,10 +77,10 @@ void bellman_ford_parallel(CSR csr, int32_t src) {
     pthread_barrier_destroy(&mybarrier);
 
     t = clock() - t;
-    //cout << "Convergence count: " << count.load() << endl;
-    //cout << "Bellman Ford with " << MAX_THREADS << "threads took " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
+    cout << "Convergence count: " << count.load() << endl;
+    cout << "Bellman Ford with " << MAX_THREADS << "threads took " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
 
-    bool print = true;
+    bool print = false;
     if (print) {
         for(int i = 0; i < (int)csr.getSize(); ++i) {
             if(a_dist[i].val->load() == INT_MAX) {
