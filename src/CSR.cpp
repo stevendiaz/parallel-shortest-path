@@ -102,12 +102,6 @@ void CSR::printNodeLabels() {
 }
 
 
-/* @param int32_t u: node id
-* public method:
-*      gets the tentative cost of node u
-* @return long: tentative cost of node u
-*/
-
 /*
  * public method:
  *      prints all inner datastructures of CSR
@@ -129,7 +123,7 @@ void CSR::debugInfo() {
     cout << endl;
 }
 
- 
+
 void CSR::to_dimacs() {
     cout << "p sp " << size - 1 << " " <<  numEdges << endl;
 

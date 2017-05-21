@@ -13,8 +13,6 @@ atomic<bool> changed{true};
 
 pthread_barrier_t mybarrier;
 
-//bool changed = true;
-
 struct args_s {
     int thread_number;
     vector<vector<int32_t>> *graph;
@@ -97,6 +95,7 @@ void bellman_ford_parallel(CSR csr, int32_t src) {
 
 void bellman_ford_sequential(CSR csr, int32_t src) {
     clock_t t = clock();
+
     /* Begin Bellman Ford algorithm */
     vector<int32_t> dist (csr.getSize());
     for(int i = 0; i < (int)dist.size(); ++i) {
@@ -124,7 +123,7 @@ void bellman_ford_sequential(CSR csr, int32_t src) {
 
     /* Output and debug info */
     t = clock() - t;
-   cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl; 
+   cout << "Sequential Bellman-Ford takes " << ((float)t)/CLOCKS_PER_SEC << " seconds" << endl;
     bool print = false;
     if (print) {
         for(int i = 0; i < (int)dist.size(); ++i) {
@@ -142,18 +141,8 @@ int main(){
 
     Parser p = Parser();
     CSR csr = p.parseInput();
-    
-    //rmats
-    //bellman_ford_sequential(csr, 1);
+
+    // Runs bellman ford with csr as the graph and a source node of 1
     bellman_ford_parallel(csr, 1);
-
-    //road-NY
-    //bellman_ford_sequential(csr, 140961);
-    //bellman_ford_parallel(csr, 140961);
-
-    //road-FLA
-    //bellman_ford_sequential(csr, 316607);
-    //bellman_ford_parallel(csr, 316607);
-    
     return 0;
 }
