@@ -1,1 +1,1 @@
-# Assignment 6 - Performance Programming
+# Computing Single Source Shortest Path in Parallel
