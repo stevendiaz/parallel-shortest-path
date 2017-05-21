@@ -1,4 +1,4 @@
-# Parallel Bellman ford
+# Parallel Bellman-Ford
 
 ### Input Format
 
@@ -6,7 +6,9 @@ This program takes in DIMACS graph input. The specificaiton for DIMACS can be fo
 
 ### Functionality
 
-Apply a parallel Bellman-Ford algorithm to compute SSSP from a given start node.
+Apply a parallel Bellman-Ford algorithm to compute SSSP from a given start node. This uses
+POSIX Threads (pthreads.h library) and observes different approaches to parallelizing the
+Bellman-Ford algorithm. 
 
 ### How to use
 
